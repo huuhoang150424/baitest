@@ -1,0 +1,14 @@
+.dart_tool/
+.idea/
+.vscode/
+build/
+*.iml
+.metadata
+.env
+.env.local
+.env.*.local
+.DS_Store
+ios/Pods/
+ios/.symlinks/
+android/.gradle/
+android/app/build/

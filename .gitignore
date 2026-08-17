@@ -1,0 +1,41 @@
+# Node / Backend
+node_modules/
+dist/
+coverage/
+*.log
+
+# Environment variables & secrets
+.env
+.env.local
+.env.*.local
+backend/.env
+mobile/.env
+
+# Flutter / Mobile
+.dart_tool/
+.idea/
+.vscode/
+build/
+*.iml
+.metadata
+
+# iOS / Xcode
+ios/Pods/
+ios/Runner.xcworkspace/
+ios/.symlinks/
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.xcworkspace
+
+# Android / Gradle
+android/.gradle/
+android/app/build/
+android/captures/
+android/gradlew
+android/gradlew.bat
+
+# OS / System
+.DS_Store
+Thumbs.db
