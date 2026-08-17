@@ -1,20 +1,15 @@
-# BÁO CÁO CẤU TRÚC DỰ ÁN VÀ THIẾT KẾ CƠ SỞ DỮ LIỆU
-## QUẢN LÝ PHIẾU NHẬP KHO (FORM 01-VT)
+# QUẢN LÝ PHIẾU NHẬP KHO 
 
 ---
 
-## I. TỔNG QUAN DỰ ÁN
-
-Dự án **Quản lý Phiếu nhập kho (Form 01-VT)** được thiết kế theo mô hình chuẩn doanh nghiệp với sự phân tách hoàn toàn giữa **Backend RESTful API** và **Frontend Mobile Application**:
+## I. TỔNG QUAN
 
 - **Backend**: Node.js + TypeScript + Express.js + Neon PostgreSQL + Zod Validation + Swagger/OpenAPI 3.0 + Jest.
 - **Frontend**: Flutter + Dart + Material 3 + Riverpod State Management + Dio Network Client + GoRouter + Flutter Test.
 
 ---
 
-## II. GIẢI THÍCH CHI TIẾT CẤU TRÚC THƯ MỤC
-
-Dự án được chia thành 2 thư mục độc lập nằm tại thư mục gốc:
+## II. CHI TIẾT
 
 ```
 /Volumes/SSD/baitest/
@@ -136,11 +131,11 @@ mobile/
 
 ---
 
-## III. GIẢI THÍCH CHI TIẾT CƠ SỞ DỮ LIỆU (NEON POSTGRESQL)
+## III. CƠ SỞ DỮ LIỆU
 
-Cơ sở dữ liệu chính của hệ thống là **PostgreSQL** lưu trữ trên nền tảng đám mây **Neon Database**.
+Cơ sở dữ liệu **PostgreSQL**
 
-### 1. Sơ đồ thực thể ERD & Mối quan hệ
+### 1. Sơ đồ 
 
 ```
 ┌──────────────────────────────────────┐       1 : N       ┌──────────────────────────────────────────┐
@@ -217,58 +212,9 @@ Cơ sở dữ liệu chính của hệ thống là **PostgreSQL** lưu trữ tr�
 
 ---
 
-### 3. Tại sao chọn Kiểu Dữ Liệu `NUMERIC(18,2)` thay vì `FLOAT`?
+## IV. CHẠY CHƯƠNG TRÌNH
 
-- **Vấn đề của FLOAT**: `FLOAT` / `REAL` sử dụng định dạng số thực dấu phẩy động IEEE 754. Khi làm việc với tiền tệ, `FLOAT` sẽ gây ra sai số ngầm (ví dụ: `0.1 + 0.2 = 0.30000000000000004`). Điều này là **KHÔNG THỂ CHẤP NHẬN ĐƯỢC** trong kế toán và tài chính doanh nghiệp.
-- **Ưu điểm của NUMERIC(18,2)**: `NUMERIC(18,2)` lưu trữ số thập phân chính xác tuyệt đối với 18 chữ số tổng cộng và 2 chữ số sau dấu phẩy (hỗ trợ tới 999.999.999.999.999,99 VNĐ), đảm bảo không bao giờ bị lệch 1 đồng nào khi nhân đơn giá và cộng tổng tiền.
-
----
-
-### 4. Ràng buộc & Bảo vệ Dữ liệu (Constraints)
-
-1. **Chống âm giá trị (`CHECK Constraints`)**:
-   - `total_amount >= 0`
-   - `quantity_document >= 0`
-   - `quantity_received >= 0`
-   - `unit_price >= 0`
-   - `amount >= 0`
-   - `item_order > 0`
-2. **Đảm bảo tính Duy nhất (`UNIQUE Constraints`)**:
-   - `receipt_no` duy nhất trên toàn CSDL: Không thể tạo 2 phiếu có cùng số phiếu.
-   - `CONSTRAINT unique_receipt_item_order UNIQUE (receipt_id, item_order)`: Thứ tự vật tư trong cùng 1 phiếu không bao giờ bị trùng STT.
-
----
-
-### 5. Tối ưu hóa Truy vấn bằng Chỉ mục (Indexes)
-
-- `idx_goods_receipts_receipt_date`: Tối ưu hóa truy vấn sắp xếp danh sách phiếu nhập kho theo `receipt_date DESC`.
-- `idx_goods_receipt_items_receipt_id`: Tối ưu hóa truy vấn JOIN danh sách vật tư theo `receipt_id`.
-
----
-
-### 6. Quy trình PostgreSQL Transaction Nguyên Tử (Atomicity)
-
-Khi thực hiện lệnh `POST /api/receipts` để tạo phiếu nhập kho:
-
-```
-BEGIN TRANSACTION;
-  │
-  ├──► 1. INSERT INTO goods_receipts (...) RETURNING id;
-  │
-  ├──► 2. LOOP INSERT INTO goods_receipt_items (receipt_id, ...);
-  │
-  ├──► NẾU THÀNH CÔNG ──► COMMIT TRANSACTION; (Lưu vĩnh viễn vào CSDL)
-  │
-  └──► NẾU BẤT KỲ LỖI NÀO ──► ROLLBACK TRANSACTION; (Hủy bỏ toàn bộ, CSDL sạch sẽ)
-```
-
-Điều này đảm bảo không bao giờ xảy ra tình trạng lỗi làm cho phiếu được lưu mà danh sách vật tư không được lưu.
-
----
-
-## IV. TÓM TẮT HƯỚNG DẪN VẬN HÀNH
-
-### 1. Chạy Backend REST API
+### 1. Chạy Backend
 ```bash
 cd backend
 npm install
@@ -277,7 +223,7 @@ npm run dev
 ```
 - **Swagger Documentation UI**: [http://localhost:3000/swagger](http://localhost:3000/swagger)
 
-### 2. Chạy Frontend Mobile App (iOS Simulator)
+### 2. Chạy Frontend
 ```bash
 cd mobile
 flutter pub get
