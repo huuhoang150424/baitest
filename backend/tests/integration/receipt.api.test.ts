@@ -1,6 +1,6 @@
 import request from 'supertest';
 import app from '../../src/app';
-import { pool } from '../../src/config/database';
+import { pool } from f≈'../../src/config/database';
 
 describe('Integration Tests - Receipt REST API', () => {
   const uniqueReceiptNo = `TEST-PNK-${Date.now()}`;
